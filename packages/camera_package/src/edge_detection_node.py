@@ -7,7 +7,7 @@ from duckietown.dtros import DTROS, NodeType
 from sensor_msgs.msg import CompressedImage
 
 
-TOPIC_NAME = '/mitchy/camera_node/image/compressed'
+TOPIC_NAME = '/walle/camera_node/image/compressed'
 class EdgeDetectionNode(DTROS):
     def __init__(self, node_name):
         
