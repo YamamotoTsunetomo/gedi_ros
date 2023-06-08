@@ -132,9 +132,10 @@ class MyNode(DTROS):
 
 ### Callback function
 add inside class `MyNode` the following:
+
 ```py
 def callback(self, msg):
-    print(f'received message with type ${type(msg)}') # ideally, <class 'CompressedImage'>
+    print(f'received message with type ${type(msg)}')  # ideally, <class 'CompressedImage'>
 
     # converting from CompressedImage to cv2. yeah... that's actual name of the method 
     converted_img = self.bridge.compressed_imgmsg_to_cv2(msg, 'bgr8')
@@ -146,7 +147,7 @@ def callback(self, msg):
     compressed_result_img = self.bridge.cv2_to_compressed_imgmsg(img)
 
     # publishing the result
-    self.pub.publish(compressed_result_img)
+    self.wh_pub.publish(compressed_result_img)
 ```
 
 ### Main function
