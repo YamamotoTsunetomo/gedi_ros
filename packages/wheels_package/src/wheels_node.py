@@ -1,84 +1,123 @@
 #!/usr/bin/env python3
 
+import os
 import rospy
 from duckietown.dtros import DTROS, NodeType
 from duckietown_msgs.msg import WheelsCmdStamped, Twist2DStamped, BoolStamped
 
 
+HOST = os.environ['VEHICLE_NAME']
+cmd = f'/{HOST}/car_cmd_switch_node/cmd'
+car_cmd = f'/{HOST}/joy_mapper_node/car_cmd'
+velocity = f'/{HOST}/kinematics_node/velocity'
+wheels_cmd = f'/{HOST}/wheels_driver_node/wheels_cmd'
+wheels_cmd_executed = f'/{HOST}/wheels_driver_node/wheels_cmd_executed'
+
 class WheelsNode(DTROS):
     def __init__(self, node_name):
         super(WheelsNode, self).__init__(node_name=node_name, node_type=NodeType.CONTROL)
-        # self.sub = rospy.Subscriber(
-        #     '/walle/kinematics_node/velocity',
-        #     Twist2DStamped,
-        #     self.callback,
-        #     queue_size=1
-        # )
+        # testing for all Twist2DStamped, WheelsCmdStamped
 
-        self._starter = rospy.Publisher(
-            '/gedi/joy_mapper_node/joystick_override',
-            BoolStamped,
+
+        # CMD
+        self.cmd_pub = rospy.Publisher(
+            cmd,
+            Twist2DStamped,
             queue_size=1
         )
 
-        msg = BoolStamped()
-        msg.data = False
-        self._starter.publish(msg)
+        self.cmd_sub = rospy.Subscriber(
+            cmd,
+            Twist2DStamped,
+            self.cmd_cb,
+            queue_size=1
+        )
 
-        self.wh_sub = rospy.Subscriber(
-            'walle/wheels_driver_node/wheels_cmd',
-            WheelsCmdStamped,
-            self.wh_callback,
+        # CMD_PUB
+        self.car_cmd_pub = rospy.Publisher(
+            car_cmd,
+            Twist2DStamped,
+            queue_size=1
+        )
+
+        self.car_cmd_sub = rospy.Subscriber(
+            car_cmd,
+            Twist2DStamped,
+            self.car_cmd_cb,
+            queue_size=1
+        )
+
+        # VELOCITY
+        self.velocity_pub = rospy.Publisher(
+            velocity,
+            Twist2DStamped,
             queue_size=1
         )
 
         self.velocity_sub = rospy.Subscriber(
-            'walle/kinematics_node/velocity',
+            velocity,
             Twist2DStamped,
-            self.velocity_callback,
+            self.velocity_cb,
             queue_size=1
         )
 
-        self.wh_pub = rospy.Publisher(
-            'walle/wheels_driver_node/wheels_cmd',
+        # WHEELS_CMD
+        self.wheels_cmd_pub = rospy.Publisher(
+            wheels_cmd,
             WheelsCmdStamped,
             queue_size=1
         )
 
-        self.velocity_pub = rospy.Publisher(
-            'walle/kinematics_node/velocity',
-            Twist2DStamped,
+        self.wheels_cmd_sub = rospy.Subscriber(
+            wheels_cmd,
+            WheelsCmdStamped,
+            self.wheels_cmd_cb,
             queue_size=1
         )
 
-    # def callback(self, msg): # type(msg) = Twist2DStamped
-    #     print(f'received of type {type(msg)}')
-    #
-    #     msg_wheels_cmd = WheelsCmdStamped()
-    #     msg_wheels_cmd.header.stamp = msg.header.stamp
-    #     # commenting out calibration bullshit
-    #     msg_wheels_cmd.vel_right = 100 #u_r_limited
-    #     msg_wheels_cmd.vel_left = 100 #u_l_limited
-    #     self.pub.publish(msg_wheels_cmd)
+        # WHEELS_CMD_EXECUTED
+        self.wheels_cmd_executed_pub = rospy.Publisher(
+            wheels_cmd_executed,
+            WheelsCmdStamped,
+            queue_size=1
+        )
 
-    def wh_callback(self, wh):
-        rospy.loginfo(f'received wheels info with vel_left={wh.vel_left}, vel_right={wh.vel_right}')
+        self.wheels_cmd_executed_sub = rospy.Subscriber(
+            wheels_cmd_executed,
+            WheelsCmdStamped,
+            self.wheels_cmd_executed_cb,
+            queue_size=1
+        )
 
-    def velocity_callback(self, vel):
-        rospy.loginfo(f'received Twist2DStamped with velocity={vel.v}, omega={vel.omega}')
+    def cmd_cb(self, twist):
+        rospy.loginfo(f'cmd received {type(twist)}')
+
+    def car_cmd_cb(self, twist):
+        rospy.loginfo(f'cmd received {type(twist)}')
+
+    def velocity_cb(self, twist):
+        rospy.loginfo(f'cmd received {type(twist)}')
+        
+
+    def wheels_cmd_cb(self, wheels):
+        rospy.loginfo(f'cmd received {type(wheels)}')
+
+    def wheels_cmd_executed_cb(self, wheels):
+        rospy.loginfo(f'cmd received {type(wheels)}')
 
     def run(self):
-        msg = WheelsCmdStamped()
-        msg.vel_right = 1
-        msg.vel_left = 0
+        wheel = WheelsCmdStamped()
+        wheel.vel_right = 1
+        wheel.vel_left = 1
 
-        vel = Twist2DStamped()
-        vel.v = 40
-        vel.omega = 10
+        twist = Twist2DStamped()
+        twist.v = 40
+        twist.omega = 10
+
         while not rospy.is_shutdown():
-            rospy.loginfo('publishing the SHIT!')
-            self.wh_pub.publish(msg)
-            self.velocity_pub.publish(vel)
+            self.wheels_cmd_pub.publish(wheel)
+            self.wheels_cmd_executed_pub.publish(wheel)
+            self.cmd_pub.publish(twist)
 
 
 if __name__ == '__main__':
