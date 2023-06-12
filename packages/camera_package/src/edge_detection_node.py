@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
+import os
 import cv2
 import rospy
 from cv_bridge import CvBridge
 from duckietown.dtros import DTROS, NodeType
 from sensor_msgs.msg import CompressedImage
 
+HOST = os.environ['VEHICLE_NAME']
+TOPIC_NAME = f'/{HOST}/camera_node/image/compressed'
 
-TOPIC_NAME = '/walle/camera_node/image/compressed'
 class EdgeDetectionNode(DTROS):
     def __init__(self, node_name):
         
