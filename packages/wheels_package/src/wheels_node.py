@@ -9,7 +9,7 @@ import time
 from std_srvs.srv import EmptyResponse, Empty
 from duckietown.dtros import DTROS, NodeType, DTParam, ParamType
 from duckietown_msgs.msg import WheelsCmdStamped, Twist2DStamped 
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 
 
 HOST = os.environ['VEHICLE_NAME']
@@ -36,6 +36,7 @@ class WheelsNode(DTROS):
         self._v_max = DTParam("~v_max", param_type=ParamType.FLOAT, min_value=0.01, max_value=2.0)
         self._omega_max = DTParam("~omega_max", param_type=ParamType.FLOAT, min_value=1.0, max_value=10.0)
 
+        self.is_obstacle_detected = False
 
         self.pub_cmd = rospy.Publisher(
             cmd,
@@ -208,6 +209,11 @@ class WheelsNode(DTROS):
         tw = self.get_twist(v=v, omega=omega)
         tw.header = twist.header
         self.pub_velocity.publish(tw)
+
+    def obstacle_dt_cb(self, is_detected):
+        # print(f'duckiebot: {is_detected.data}')
+        self.is_obstacle_detected = is_detected.data
+        print(f'obstacle detected:{self.is_obstacle_detected}')
 
 if __name__ == '__main__':
     print('started')
