@@ -13,7 +13,8 @@ dt-launchfile-init
 # NOTE: Use `dt-exec COMMAND` to run the main process (blocking process)
 
 # launching app
-dt-exec rosrun WheelsNode wheels_node.py # wheels_node.py
+dt-exec rosrun wheels_package wheels_node.py # wheels_node.py
+# dt-exec rosrun wheels_package wheels_sub_node.py # wheels_node.py
 
 # ----------------------------------------------------------------------------
 # YOUR CODE ABOVE THIS LINE
