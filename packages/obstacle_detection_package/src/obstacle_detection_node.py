@@ -40,10 +40,10 @@ class ObstacleDetectionNode(DTROS):
         is_detected, _ = cv2.findCirclesGrid(img_cv2, patternSize=(7, 3), flags=cv2.CALIB_CB_SYMMETRIC_GRID, blobDetector=cv2.SimpleBlobDetector_create())
 
         # convert filtered result to CompressedImage
-        img_filtered_compressed = self.bridge.cv2_to_compressed_imgmsg(img_cv2)
+        # img_filtered_compressed = self.bridge.cv2_to_compressed_imgmsg(img_cv2)
 
         # publish to 'image_pub'
-        self.pub.publish(img_filtered_compressed)
+        # self.pub.publish(img_filtered_compressed)
         self.remote_pub.publish(is_detected)
 
 if __name__ == '__main__':

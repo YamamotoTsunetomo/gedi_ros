@@ -220,7 +220,7 @@ class WheelsNode(DTROS):
                     ]
         
     def run(self):
-        rospy.Rate(0.5).sleep()
+        rospy.sleep(2)
         # motions = self.get_motion()
         # for motion in motions:
         #     tw = motion['Twist']
@@ -238,15 +238,15 @@ class WheelsNode(DTROS):
         while not rospy.is_shutdown():
             if self.detect:
                 self.stop()
-                rospy.Rate(1).sleep()
+                rospy.sleep(1)
                 self.law_abiding_citizen()
-                # self.dejavu()
-                rospy.Rate(1).sleep()
+                rospy.sleep(1)
+                self.dejavu()
                 self.stop()
                 break
         # self.test_move()
         self.move(wh, tw)
-        rospy.Rate(0.5).sleep()
+        rospy.sleep(2)
         self.stop()
 
 
@@ -261,51 +261,51 @@ class WheelsNode(DTROS):
         wh = self.get_wheel(0.1, 0.2)
         self.move(wh, tw)
 
-        rospy.Rate(1).sleep()
+        rospy.sleep(3)
         
-        tw = self.get_twist(0.25, 0)
-        wh = self.get_wheel(0.2, 0.2)
-        self.move(wh, tw)
+        # tw = self.get_twist(0.25, 0)
+        # wh = self.get_wheel(0.2, 0.2)
+        # self.move(wh, tw)
 
-        rospy.Rate(1).sleep()
+        # rospy.sleep(1)
 
-        tw = self.get_twist(0.25, 8)
-        wh = self.get_wheel(0.4, 0.2)
-        self.move(wh, tw)
+        # tw = self.get_twist(0.25, 8)
+        # wh = self.get_wheel(0.4, 0.2)
+        # self.move(wh, tw)
 
-        rospy.Rate(2).sleep()
+        # rospy.sleep)
 
     def law_abiding_citizen(self):
         # left
-        tw = self.get_twist(0.25, 4.5)
+        tw = self.get_twist(0.3, 5)
         wh = self.get_wheel(0.1, 0.7)
         self.move(wh, tw)
 
-        rospy.Rate(1).sleep()
+        rospy.sleep(1)
         self.stop()
 
         # right 
-        tw = self.get_twist(0.25, -4.5)
+        tw = self.get_twist(0.4, -5)
         wh = self.get_wheel(0.7, 0.1)
         self.move(wh, tw)
 
-        rospy.Rate(1).sleep()
+        rospy.sleep(1)
         self.stop()
 
         # right        
-        tw = self.get_twist(0.25, -4.5)
+        tw = self.get_twist(0.3, -5)
         wh = self.get_wheel(0.7, 0.1)
         self.move(wh, tw)
 
-        rospy.Rate(1).sleep()
+        rospy.sleep(1)
         self.stop()
 
         # left        
-        tw = self.get_twist(0.25, 4.5)
+        tw = self.get_twist(0.45, 5)
         wh = self.get_wheel(0.1, 0.7)
         self.move(wh, tw)
 
-        rospy.Rate(1).sleep()
+        rospy.sleep(1)
         self.stop()
 
 
