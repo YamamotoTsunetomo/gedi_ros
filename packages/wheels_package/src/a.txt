@@ -1,0 +1,87 @@
+Twist: v=0.0, omega=8.300000190734863
+Wheel: left=-0.4661076068878174, right=0.46564173698425293
+TIMEDIFF: 0.196752
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 1.275982
+
+Twist: v=0.4099999964237213, omega=0.0
+Wheel: left=0.47776031494140625, right=0.4772827923297882
+TIMEDIFF: 0.933086
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.704729
+
+Twist: v=0.0, omega=-8.300000190734863
+Wheel: left=0.4661076068878174, right=-0.46564173698425293
+TIMEDIFF: 0.156581
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.771822
+
+Twist: v=0.4099999964237213, omega=0.0
+Wheel: left=0.47776031494140625, right=0.4772827923297882
+TIMEDIFF: 0.536066
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.463154
+
+Twist: v=0.0, omega=-8.300000190734863
+Wheel: left=0.4661076068878174, right=-0.46564173698425293
+TIMEDIFF: 0.161637
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.602932
+
+Twist: v=0.4099999964237213, omega=0.0
+Wheel: left=0.47776031494140625, right=0.4772827923297882
+TIMEDIFF: 0.634661
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.7356
+
+Twist: v=0.4099999964237213, omega=0.0
+Wheel: left=0.47776031494140625, right=0.4772827923297882
+TIMEDIFF: 0.167894
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.256256
+
+Twist: v=0.4099999964237213, omega=0.0
+Wheel: left=0.47776031494140625, right=0.4772827923297882
+TIMEDIFF: 0.296109
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.367904
+
+Twist: v=0.0, omega=8.300000190734863
+Wheel: left=-0.4661076068878174, right=0.46564173698425293
+TIMEDIFF: 0.190757
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.365342
+
+Twist: v=0.0, omega=8.300000190734863
+Wheel: left=-0.4661076068878174, right=0.46564173698425293
+TIMEDIFF: 0.095035
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.449475
+
+Twist: v=0.4099999964237213, omega=0.0
+Wheel: left=0.47776031494140625, right=0.4772827923297882
+TIMEDIFF: 0.877571
+
+Twist: v=0.0, omega=0.0
+Wheel: left=0.0, right=0.0
+TIMEDIFF: 0.877571

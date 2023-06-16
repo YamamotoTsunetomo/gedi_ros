@@ -22,21 +22,23 @@ class WheelsNode(DTROS):
     def __init__(self, node_name):
         super(WheelsNode, self).__init__(node_name=node_name, node_type=NodeType.CONTROL)
 
-        self.vehicle_name = rospy.get_namespace().strip("/")
+        # self.vehicle_name = rospy.get_namespace().strip("/")
 
-        self.read_calibration_params()
+        # self.read_calibration_params()
 
-        self._k = DTParam("~k", param_type=ParamType.FLOAT, min_value=0.1, max_value=0.5)
+        # self._k = DTParam("~k", param_type=ParamType.FLOAT, min_value=0.1, max_value=0.5)
         # parameters
-        self._gain = DTParam("~gain", param_type=ParamType.FLOAT, min_value=0.1, max_value=1.0)
-        self._trim = DTParam("~trim", param_type=ParamType.FLOAT, min_value=0.1, max_value=1.0)
-        self._limit = DTParam("~limit", param_type=ParamType.FLOAT, min_value=0.1, max_value=1.0)
-        self._baseline = DTParam("~baseline", param_type=ParamType.FLOAT, min_value=0.05, max_value=0.2)
-        self._radius = DTParam("~radius", param_type=ParamType.FLOAT, min_value=0.01, max_value=0.1)
-        self._v_max = DTParam("~v_max", param_type=ParamType.FLOAT, min_value=0.01, max_value=2.0)
-        self._omega_max = DTParam("~omega_max", param_type=ParamType.FLOAT, min_value=1.0, max_value=10.0)
+        # self._gain = DTParam("~gain", param_type=ParamType.FLOAT, min_value=0.1, max_value=1.0)
+        # self._trim = DTParam("~trim", param_type=ParamType.FLOAT, min_value=0.1, max_value=1.0)
+        # self._limit = DTParam("~limit", param_type=ParamType.FLOAT, min_value=0.1, max_value=1.0)
+        # self._baseline = DTParam("~baseline", param_type=ParamType.FLOAT, min_value=0.05, max_value=0.2)
+        # self._radius = DTParam("~radius", param_type=ParamType.FLOAT, min_value=0.01, max_value=0.1)
+        # self._v_max = DTParam("~v_max", param_type=ParamType.FLOAT, min_value=0.01, max_value=2.0)
+        # self._omega_max = DTParam("~omega_max", param_type=ParamType.FLOAT, min_value=1.0, max_value=10.0)
 
-        self.is_obstacle_detected = False
+        # self.is_obstacle_detected = False
+        self.wh = self.get_wheel(0.4, 0.4)
+        self.tw = self.get_twist(0.4, 0)
 
         self.pub_cmd = rospy.Publisher(
             cmd,
@@ -68,37 +70,245 @@ class WheelsNode(DTROS):
             queue_size=1
         )
 
+        self.sub_detected = rospy.Subscriber(
+            'obstacle_detected',
+            Bool,
+            self.det_cb,
+            queue_size=1
+        )
+
+        self.detect = False
+
     def stop(self):
         wh = self.get_wheel(0,0)
         tw = self.get_twist(0,0)
         self.move(wheel=wh, twist=tw)
 
+    def det_cb(self, b):
+        rospy.loginfo(f'detect: {b}')
+        self.detect = b.data
+    
+    def get_motion(self):
+        return [ {            
+                "Twist": self.get_twist(v=0.0, omega=8.300000190734863),
+                "Wheel": self.get_wheel(left=-0.4661076068878174, right=0.46564173698425293),
+                "TIMEDIFF": 0.196752
+            },
+            
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 1.275982
+            },
+            
+            {
+                "Twist": self.get_twist(v=0.4099999964237213, omega=0.0),
+                "Wheel": self.get_wheel(left=0.47776031494140625, right=0.4772827923297882),
+                "TIMEDIFF": 0.933086
+            },
 
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.704729
+            },
+            
+            {
+                "Twist": self.get_twist(v=0.0, omega=-8.300000190734863),
+                "Wheel": self.get_wheel(left=0.4661076068878174, right=-0.46564173698425293),
+                "TIMEDIFF": 0.156581
+            },
+
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.771822
+            },
+
+            {
+                "Twist": self.get_twist(v=0.4099999964237213, omega=0.0),
+                "Wheel": self.get_wheel(left=0.47776031494140625, right=0.4772827923297882),
+                "TIMEDIFF": 0.536066
+            },
+
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.463154
+            },
+
+            {
+                "Twist": self.get_twist(v=0.0, omega=-8.300000190734863),
+                "Wheel": self.get_wheel(left=0.4661076068878174, right=-0.46564173698425293),
+                "TIMEDIFF": 0.161637
+            },
+
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.602932
+            },
+
+            {
+                "Twist": self.get_twist(v=0.4099999964237213, omega=0.0),
+                "Wheel": self.get_wheel(left=0.47776031494140625, right=0.4772827923297882),
+                "TIMEDIFF": 0.634661
+            },
+
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.7356
+            },
+
+            {
+                "Twist": self.get_twist(v=0.4099999964237213, omega=0.0),
+                "Wheel": self.get_wheel(left=0.47776031494140625, right=0.4772827923297882),
+                "TIMEDIFF": 0.167894
+            },
+
+            {
+
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.256256
+            },
+
+            {
+                "Twist": self.get_twist(v=0.4099999964237213, omega=0.0),
+                "Wheel": self.get_wheel(left=0.47776031494140625, right=0.4772827923297882),
+                "TIMEDIFF": 0.296109
+            },
+
+            {
+
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.367904
+            },
+
+            {
+
+                "Twist": self.get_twist(v=0.0, omega=8.300000190734863),
+                "Wheel": self.get_wheel(left=-0.4661076068878174, right=0.46564173698425293),
+                "TIMEDIFF": 0.190757},
+
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.365342},
+
+            {
+                "Twist": self.get_twist(v=0.0, omega=8.300000190734863),
+                "Wheel": self.get_wheel(left=-0.4661076068878174, right=0.46564173698425293),
+                "TIMEDIFF": 0.095035},
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.449475},
+
+            {
+
+                "Twist": self.get_twist(v=0.4099999964237213, omega=0.0),
+                "Wheel": self.get_wheel(left=0.47776031494140625, right=0.4772827923297882),
+                "TIMEDIFF": 0.877571},
+            {
+                "Twist": self.get_twist(v=0.0, omega=0.0),
+                "Wheel": self.get_wheel(left=0.0, right=0.0),
+                "TIMEDIFF": 0.877571
+                }
+                    ]
+        
     def run(self):
         rospy.Rate(0.5).sleep()
+        # motions = self.get_motion()
+        # for motion in motions:
+        #     tw = motion['Twist']
+        #     wh = motion['Wheel']
+        #     pause = motion['TIMEDIFF']
 
-        # wh = self.get_wheel(0.5, 0.5)
-        tw = self.get_twist(1, 0)
+        #     self.move(wh, tw)
+        #     rospy.R
+        # ate(1 / pause).sleep()
+        
+        wh = self.get_wheel(0.2, 0.2)
+        tw = self.get_twist(0.25, 0)
+        self.move(wh, tw)
 
-        self.pub_car_cmd.publish(tw)
-        # self.move(wheel=wh, twist=tw)
+        while not rospy.is_shutdown():
+            if self.detect:
+                self.stop()
+                rospy.Rate(1).sleep()
+                self.law_abiding_citizen()
+                # self.dejavu()
+                rospy.Rate(1).sleep()
+                self.stop()
+                break
+        # self.test_move()
+        self.move(wh, tw)
+        rospy.Rate(0.5).sleep()
+        self.stop()
 
-        # rospy.Rate(0.5).sleep()
-        rospy.loginfo('-------------------')
 
-        # wh = self.get_wheel(1, 0.2)
-        # tw = self.get_twist(10, 10)
-        # self.move(wh, tw)
+    def get_wheel(self, left, right):
+        wheel = WheelsCmdStamped()
+        wheel.vel_left = left
+        wheel.vel_right = right
+        return wheel
+    
+    def dejavu(self):
+        tw = self.get_twist(0.25, -7)
+        wh = self.get_wheel(0.1, 0.2)
+        self.move(wh, tw)
+
+        rospy.Rate(1).sleep()
+        
+        tw = self.get_twist(0.25, 0)
+        wh = self.get_wheel(0.2, 0.2)
+        self.move(wh, tw)
 
         rospy.Rate(1).sleep()
 
+        tw = self.get_twist(0.25, 8)
+        wh = self.get_wheel(0.4, 0.2)
+        self.move(wh, tw)
+
+        rospy.Rate(2).sleep()
+
+    def law_abiding_citizen(self):
+        # left
+        tw = self.get_twist(0.25, 4.5)
+        wh = self.get_wheel(0.1, 0.7)
+        self.move(wh, tw)
+
+        rospy.Rate(1).sleep()
         self.stop()
 
-    def get_wheel(self, l, r):
-        wheel = WheelsCmdStamped()
-        wheel.vel_left = l
-        wheel.vel_right = r
-        return wheel
+        # right 
+        tw = self.get_twist(0.25, -4.5)
+        wh = self.get_wheel(0.7, 0.1)
+        self.move(wh, tw)
+
+        rospy.Rate(1).sleep()
+        self.stop()
+
+        # right        
+        tw = self.get_twist(0.25, -4.5)
+        wh = self.get_wheel(0.7, 0.1)
+        self.move(wh, tw)
+
+        rospy.Rate(1).sleep()
+        self.stop()
+
+        # left        
+        tw = self.get_twist(0.25, 4.5)
+        wh = self.get_wheel(0.1, 0.7)
+        self.move(wh, tw)
+
+        rospy.Rate(1).sleep()
+        self.stop()
+
+
 
     def get_twist(self, v, omega):
         twist = Twist2DStamped()
@@ -110,47 +320,93 @@ class WheelsNode(DTROS):
         self.pub_wheels_cmd.publish(wheel)
         self.pub_cmd.publish(twist)
 
+
+    def test_move(self):
+        moves = [
+            # forward
+            [
+                self.get_twist(0.25,0), 
+                self.get_wheel(0.2, 0.2)
+            ],
+
+            # omega > 0, left < right
+            [
+                self.get_twist(0.25,2), 
+                self.get_wheel(0.2, 0.7)
+            ],
+
+            # omega < 0, left > right
+            [
+                self.get_twist(0.25,-2), 
+                self.get_wheel(0.7, 0.2)
+            ],
+
+            # omega > 0, left = right
+            [
+                self.get_twist(0.25,2), 
+                self.get_wheel(0.2, 0.4)
+            ],
+
+            # omega < 0 left = right
+            [
+                self.get_twist(0.25, -2), 
+                self.get_wheel(0.4, 0.2)
+            ],
+        ]
+
+        for move in moves:
+            tw = move[0]
+            wh = move[1]
+            self.move(wh, tw)
+            rospy.Rate(1).sleep()
+            self.stop()
+            rospy.Rate(1).sleep()
+
     
     def get_current_configuration(self):
-        return {
-            "gain": rospy.get_param("~gain",self._gain),
-            "trim": rospy.get_param("~trim",self._trim),
-            "baseline": rospy.get_param("~baseline",self._baseline),
-            "radius": rospy.get_param("~radius",self._radius),
-            "k": rospy.get_param("~k",self._k),
-            "limit": rospy.get_param("~limit",self._limit),
-            "v_max": rospy.get_param("~v_max",self._v_max),
-            "omega_max": rospy.get_param("~omega_max",self._omega_max),
-        }
+        pass
+        # return {
+            # "gain": rospy.get_param("~gain",self._gain),
+            # "trim": rospy.get_param("~trim",self._trim),
+            # "baseline": rospy.get_param("~baseline",self._baseline),
+            # "radius": rospy.get_param("~radius",self._radius),
+            # "k": rospy.get_param("~k",self._k),
+            # "limit": rospy.get_param("~limit",self._limit),
+            # "v_max": rospy.get_param("~v_max",self._v_max),
+            # "omega_max": rospy.get_param("~omega_max",self._omega_max),
+        # }
 
     def read_calibration_params(self):
-        file_name = self.get_calibration_filepath(self.vehicle_name)
+        pass
+        # file_name = self.get_calibration_filepath(self.vehicle_name)
 
-        if not os.path.isfile(file_name):
-            self.logwarn("Kinematics calibration %s not found! Using default" % file_name)
-        else:
-            with open(file_name, 'r') as in_file:
-                try:
-                    yaml_dict = yaml.load(in_file, Loader=yaml.FullLoader)
-                except yaml.YAMLError as e:
-                    self.logfatal(f'Yaml syntax error: {e}')
-                    rospy.signal_shutdown()
-                    return
-            if yaml_dict is None:
-                return
-            for param_name in self.get_current_configuration().keys():
-                param_value = yaml_dict.get(param_name)
-                if param_name is not None and param_value is not None:
-                    rospy.set_param("~" + param_name, param_value)
+        # if not os.path.isfile(file_name):
+        #     self.logwarn("Kinematics calibration %s not found! Using default" % file_name)
+        # else:
+        #     with open(file_name, 'r') as in_file:
+        #         try:
+        #             yaml_dict = yaml.load(in_file, Loader=yaml.FullLoader)
+        #         except yaml.YAMLError as e:
+        #             self.logfatal(f'Yaml syntax error: {e}')
+        #             rospy.signal_shutdown()
+        #             return
+        #     if yaml_dict is None:
+        #         return
+        #     for param_name in self.get_current_configuration().keys():
+        #         param_value = yaml_dict.get(param_name)
+        #         if param_name is not None and param_value is not None:
+        #             rospy.set_param("~" + param_name, param_value)
             
     @staticmethod
     def get_calibration_filepath(name):
-        cali_folder = '/data/config/calibrations/kinematics/'
-        return cali_folder + name + '.yaml'
+        pass
+        # cali_folder = '/data/config/calibrations/kinematics/'
+        # return cali_folder + name + '.yaml'
     
     @staticmethod
     def trim(value, low, high):
-        return max(min(value, high), low)
+        # return max(min(value, high), low)
+        pass
     
     def car_cmd_cb(self, twist):
         twist.v = self.trim(
